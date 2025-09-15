@@ -3,142 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Centering Operator - Multiple Visualizations</title>
+    <title>Centering Operator Visualizations</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             padding: 20px;
+            background: #f5f5f5;
+            margin: 0;
         }
         
-        .main-container {
-            max-width: 1400px;
-            margin: 0 auto;
+        .container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 1000px;
+            width: 100%;
         }
         
-        h1 {
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
             text-align: center;
-            color: white;
-            margin-bottom: 30px;
-            font-size: 2.5em;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
         
         .tabs {
             display: flex;
             justify-content: center;
             margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 10px;
+            border-bottom: 2px solid #e0e0e0;
         }
         
         .tab-button {
-            padding: 12px 24px;
-            background: white;
+            padding: 10px 20px;
+            background: none;
             border: none;
-            border-radius: 25px;
             cursor: pointer;
             font-size: 14px;
-            font-weight: 600;
+            color: #666;
             transition: all 0.3s;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
         }
         
         .tab-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            color: #333;
         }
         
         .tab-button.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            color: #2196F3;
+            border-bottom-color: #2196F3;
+            font-weight: bold;
         }
         
         .tab-content {
             display: none;
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
         
         .tab-content.active {
             display: block;
-            animation: fadeIn 0.5s;
         }
         
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .visualization-container {
+        .canvas-container {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
+            justify-content: center;
+            margin: 20px 0;
         }
         
         canvas {
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
+            border: 1px solid #ddd;
             background: white;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         
         .controls {
             display: flex;
-            gap: 10px;
             flex-wrap: wrap;
+            gap: 10px;
             justify-content: center;
+            margin: 20px 0;
         }
         
-        .btn {
+        button {
             padding: 10px 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #4CAF50;
             color: white;
             border: none;
-            border-radius: 20px;
+            border-radius: 5px;
             cursor: pointer;
             font-size: 14px;
-            font-weight: 600;
-            transition: all 0.3s;
+            transition: background 0.3s;
         }
         
-        .btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        button:hover {
+            background: #45a049;
         }
         
-        .btn:disabled {
+        button:disabled {
             background: #ccc;
             cursor: not-allowed;
-            transform: scale(1);
         }
         
-        .info-box {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-            border-left: 5px solid #667eea;
+        .info {
+            background: #f0f8ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #2196F3;
         }
         
-        .formula {
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 3px;
+        }
+        
+        .math {
             font-family: 'Courier New', monospace;
-            background: #f0f0f0;
+            background: #f5f5f5;
             padding: 10px;
             border-radius: 5px;
             margin: 10px 0;
             text-align: center;
-            font-size: 16px;
         }
         
         .slider-container {
@@ -146,47 +148,24 @@
             align-items: center;
             gap: 15px;
             margin: 15px 0;
+            justify-content: center;
         }
         
         .slider {
             width: 200px;
-            height: 6px;
-            -webkit-appearance: none;
-            appearance: none;
-            background: #ddd;
-            border-radius: 5px;
-            outline: none;
-        }
-        
-        .slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 20px;
-            height: 20px;
-            background: #667eea;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-        
-        .slider::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
-            background: #667eea;
-            border-radius: 50%;
-            cursor: pointer;
         }
         
         .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
             margin: 20px 0;
         }
         
         .stat-card {
             background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
+            padding: 10px 15px;
+            border-radius: 5px;
             text-align: center;
         }
         
@@ -197,143 +176,170 @@
         }
         
         .stat-value {
-            font-size: 20px;
+            font-size: 16px;
             font-weight: bold;
-            color: #667eea;
+            color: #333;
+        }
+        
+        .eigenspace-explanation {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .explanation-card {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .explanation-card h4 {
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        
+        .explanation-card p {
+            color: #666;
+            line-height: 1.6;
+            margin: 5px 0;
+        }
+        
+        .vector-label {
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 3px;
+            display: inline-block;
+        }
+        
+        .kernel-label {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .image-label {
+            background: #e3f2fd;
+            color: #1565c0;
         }
     </style>
 </head>
 <body>
-    <div class="main-container">
-        <h1>Centering Operator γ = I - (1/N)·11ᵀ</h1>
+    <div class="container">
+        <h2>Centering Operator γ = I - (1/N)·11ᵀ Visualizations</h2>
         
         <div class="tabs">
-            <button class="tab-button active" onclick="showTab('matrix')">Matrix Animation</button>
+            <button class="tab-button active" onclick="showTab('matrix')">Matrix Transformation</button>
             <button class="tab-button" onclick="showTab('dataset')">Dataset Centering</button>
             <button class="tab-button" onclick="showTab('3d')">3D Projection</button>
-            <button class="tab-button" onclick="showTab('eigen')">Eigenspace</button>
-            <button class="tab-button" onclick="showTab('pca')">PCA Preprocessing</button>
+            <button class="tab-button" onclick="showTab('eigen')">Eigenspace Analysis</button>
         </div>
         
         <!-- Matrix Animation Tab -->
         <div id="matrix" class="tab-content active">
-            <div class="visualization-container">
-                <h2>Matrix Transformation Visualization</h2>
-                <div class="info-box">
-                    <strong>Watch how γ transforms vectors:</strong> 
-                    The matrix γ = I - (1/N)·11ᵀ removes the mean component from any vector.
-                </div>
-                <canvas id="matrixCanvas" width="800" height="500"></canvas>
-                <div class="controls">
-                    <button class="btn" onclick="animateMatrix()">Animate Transformation</button>
-                    <button class="btn" onclick="showMatrixSteps()">Show Step by Step</button>
-                    <button class="btn" onclick="resetMatrix()">Reset</button>
-                </div>
-                <div class="formula">
-                    γ·x = I·x - (1/N)·11ᵀ·x = x - x̄·1
-                </div>
+            <div class="info">
+                <strong>Matrix Transformation:</strong> Watch how the centering operator γ transforms vectors by removing their mean component.
+            </div>
+            <div class="canvas-container">
+                <canvas id="matrixCanvas" width="700" height="500"></canvas>
+            </div>
+            <div class="controls">
+                <button onclick="animateMatrix()">Animate Transformation</button>
+                <button onclick="showMatrixSteps()">Step by Step</button>
+                <button onclick="resetMatrix()">Reset</button>
+            </div>
+            <div class="math">
+                γ·x = I·x - (1/N)·11ᵀ·x = x - x̄·1
             </div>
         </div>
         
         <!-- Dataset Centering Tab -->
         <div id="dataset" class="tab-content">
-            <div class="visualization-container">
-                <h2>Dataset Centering Animation</h2>
-                <div class="info-box">
-                    <strong>Centering a cloud of points:</strong> 
-                    See how an entire dataset shifts to have zero mean.
+            <div class="info">
+                <strong>Dataset Centering:</strong> See how an entire dataset shifts to have zero mean.
+            </div>
+            <div class="canvas-container">
+                <canvas id="datasetCanvas" width="700" height="500"></canvas>
+            </div>
+            <div class="controls">
+                <button onclick="generateDataset()">Generate New Data</button>
+                <button onclick="animateCentering()">Animate Centering</button>
+                <button onclick="showBeforeAfter()">Before/After</button>
+            </div>
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-label">Original Mean</div>
+                    <div class="stat-value" id="origMean">(0, 0)</div>
                 </div>
-                <canvas id="datasetCanvas" width="800" height="500"></canvas>
-                <div class="controls">
-                    <button class="btn" onclick="generateDataset()">Generate New Data</button>
-                    <button class="btn" onclick="animateCentering()">Animate Centering</button>
-                    <button class="btn" onclick="showBeforeAfter()">Before/After</button>
+                <div class="stat-card">
+                    <div class="stat-label">Centered Mean</div>
+                    <div class="stat-value" id="centMean">(0, 0)</div>
                 </div>
-                <div class="stats" id="dataStats">
-                    <div class="stat-card">
-                        <div class="stat-label">Original Mean</div>
-                        <div class="stat-value" id="origMean">(0, 0)</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Centered Mean</div>
-                        <div class="stat-value" id="centMean">(0, 0)</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Data Points</div>
-                        <div class="stat-value" id="numPoints">0</div>
-                    </div>
+                <div class="stat-card">
+                    <div class="stat-label">Data Points</div>
+                    <div class="stat-value" id="numPoints">0</div>
                 </div>
             </div>
         </div>
         
         <!-- 3D Projection Tab -->
         <div id="3d" class="tab-content">
-            <div class="visualization-container">
-                <h2>3D Orthogonal Projection</h2>
-                <div class="info-box">
-                    <strong>Centering in ℝ³:</strong> 
-                    Projection onto the plane orthogonal to 1=(1,1,1). Use mouse to rotate view.
-                </div>
-                <canvas id="threeDCanvas" width="800" height="500"></canvas>
-                <div class="controls">
-                    <button class="btn" onclick="animate3D()">Animate Projection</button>
-                    <button class="btn" onclick="add3DPoint()">Add Random Point</button>
-                    <button class="btn" onclick="reset3D()">Reset View</button>
-                </div>
-                <div class="slider-container">
-                    <label>Rotation Speed:</label>
-                    <input type="range" class="slider" id="rotSpeed" min="0" max="100" value="50">
-                    <span id="rotSpeedValue">50</span>
-                </div>
+            <div class="info">
+                <strong>3D Centering:</strong> Projection onto the plane orthogonal to 1=(1,1,1). The plane satisfies x+y+z=0.
+            </div>
+            <div class="canvas-container">
+                <canvas id="threeDCanvas" width="700" height="500"></canvas>
+            </div>
+            <div class="controls">
+                <button onclick="animate3D()">Animate Projection</button>
+                <button onclick="add3DPoint()">Add Random Point</button>
+                <button onclick="toggleRotation()">Toggle Rotation</button>
+                <button onclick="reset3D()">Reset View</button>
+            </div>
+            <div class="slider-container">
+                <label>View Angle:</label>
+                <input type="range" class="slider" id="angleX" min="-180" max="180" value="30">
+                <input type="range" class="slider" id="angleY" min="-180" max="180" value="45">
             </div>
         </div>
         
         <!-- Eigenspace Tab -->
         <div id="eigen" class="tab-content">
-            <div class="visualization-container">
-                <h2>Eigenspace Decomposition</h2>
-                <div class="info-box">
-                    <strong>Spectral properties of γ:</strong> 
-                    γ has eigenvalue 0 for 1 and eigenvalue 1 for all vectors in 1⊥.
+            <div class="info">
+                <strong>Eigenspace Decomposition:</strong> Understanding γ through its eigenvalues and eigenvectors.
+            </div>
+            
+            <div class="eigenspace-explanation">
+                <div class="explanation-card">
+                    <h4>🔴 Eigenvalue λ = 0 (Kernel)</h4>
+                    <p>• <span class="vector-label kernel-label">Eigenvector: 1 = (1,1)</span></p>
+                    <p>• This is the direction that gets "collapsed" to zero</p>
+                    <p>• γ·1 = 0·1 = 0</p>
+                    <p>• Represents the "mean direction" that we remove</p>
                 </div>
-                <canvas id="eigenCanvas" width="800" height="500"></canvas>
-                <div class="controls">
-                    <button class="btn" onclick="showEigenDecomposition()">Show Eigenvectors</button>
-                    <button class="btn" onclick="animateEigenTransform()">Animate Transform</button>
-                    <button class="btn" onclick="showSpectrum()">Show Spectrum</button>
-                </div>
-                <div class="formula">
-                    γ·1 = 0·1 (eigenvalue λ₁ = 0)<br>
-                    γ·v = 1·v for all v ⊥ 1 (eigenvalue λ₂ = 1)
+                <div class="explanation-card">
+                    <h4>🔵 Eigenvalue λ = 1 (Image)</h4>
+                    <p>• <span class="vector-label image-label">All vectors in 1⊥</span></p>
+                    <p>• These directions are preserved</p>
+                    <p>• γ·v = 1·v = v for all v ⊥ 1</p>
+                    <p>• This is the subspace where centered data lives</p>
                 </div>
             </div>
-        </div>
-        
-        <!-- PCA Preprocessing Tab -->
-        <div id="pca" class="tab-content">
-            <div class="visualization-container">
-                <h2>PCA Preprocessing: Why Centering Matters</h2>
-                <div class="info-box">
-                    <strong>Principal Component Analysis:</strong> 
-                    Centering is crucial for finding the correct principal components.
-                </div>
-                <canvas id="pcaCanvas" width="800" height="500"></canvas>
-                <div class="controls">
-                    <button class="btn" onclick="generatePCAData()">Generate Data</button>
-                    <button class="btn" onclick="showPCAWithout()">PCA Without Centering</button>
-                    <button class="btn" onclick="showPCAWith()">PCA With Centering</button>
-                    <button class="btn" onclick="comparePCA()">Compare Both</button>
-                </div>
-                <div class="stats" id="pcaStats">
-                    <div class="stat-card">
-                        <div class="stat-label">Variance Explained (PC1)</div>
-                        <div class="stat-value" id="pc1Var">0%</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Variance Explained (PC2)</div>
-                        <div class="stat-value" id="pc2Var">0%</div>
-                    </div>
-                </div>
+            
+            <div class="canvas-container">
+                <canvas id="eigenCanvas" width="700" height="500"></canvas>
+            </div>
+            
+            <div class="controls">
+                <button onclick="animateEigenDecomposition()">Animate Decomposition</button>
+                <button onclick="showEigenBasis()">Show Eigen Basis</button>
+                <button onclick="testRandomVector()">Test Random Vector</button>
+                <button onclick="showMatrixForm()">Show Matrix Form</button>
+            </div>
+            
+            <div class="math" id="eigenMath">
+                Click "Animate Decomposition" to see how any vector is decomposed into eigenspaces
             </div>
         </div>
     </div>
@@ -369,14 +375,12 @@
                 case 'eigen':
                     initEigenVisualization();
                     break;
-                case 'pca':
-                    initPCAVisualization();
-                    break;
             }
         }
         
         // Matrix Animation Implementation
         let matrixCtx, matrixAnimationId;
+        let matrixStep = 0;
         
         function initMatrixVisualization() {
             const canvas = document.getElementById('matrixCanvas');
@@ -386,82 +390,93 @@
         
         function drawMatrixGrid() {
             const ctx = matrixCtx;
-            const width = 800;
+            const width = 700;
             const height = 500;
+            const centerX = width / 2;
+            const centerY = height / 2;
             
             ctx.clearRect(0, 0, width, height);
             
-            // Draw coordinate system
-            ctx.strokeStyle = '#ddd';
-            ctx.lineWidth = 1;
+            // Draw grid
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 0.5;
             
-            // Grid
-            for (let i = 0; i <= 10; i++) {
+            for (let i = -3; i <= 3; i++) {
                 ctx.beginPath();
-                ctx.moveTo(50 + i * 70, 50);
-                ctx.lineTo(50 + i * 70, 450);
+                ctx.moveTo(centerX + i * 60, 50);
+                ctx.lineTo(centerX + i * 60, height - 50);
                 ctx.stroke();
                 
                 ctx.beginPath();
-                ctx.moveTo(50, 50 + i * 40);
-                ctx.lineTo(750, 50 + i * 40);
+                ctx.moveTo(50, centerY + i * 60);
+                ctx.lineTo(width - 50, centerY + i * 60);
                 ctx.stroke();
             }
             
-            // Axes
+            // Draw axes
             ctx.strokeStyle = '#333';
             ctx.lineWidth = 2;
             ctx.beginPath();
-            ctx.moveTo(400, 50);
-            ctx.lineTo(400, 450);
+            ctx.moveTo(50, centerY);
+            ctx.lineTo(width - 50, centerY);
             ctx.stroke();
             
             ctx.beginPath();
-            ctx.moveTo(50, 250);
-            ctx.lineTo(750, 250);
+            ctx.moveTo(centerX, 50);
+            ctx.lineTo(centerX, height - 50);
             ctx.stroke();
             
-            // Draw sample vectors
-            drawVector(200, 150, '#2196F3', 'x₁');
-            drawVector(300, 200, '#4CAF50', 'x₂');
-            drawVector(250, 100, '#FF9800', 'x₃');
+            // Labels
+            ctx.fillStyle = '#333';
+            ctx.font = '14px Arial';
+            ctx.fillText('x₁', width - 40, centerY - 10);
+            ctx.fillText('x₂', centerX + 10, 60);
+            
+            // Draw initial vectors
+            drawMatrixVector(2, 1.5, '#2196F3', 'v₁');
+            drawMatrixVector(-1.5, 2, '#4CAF50', 'v₂');
+            drawMatrixVector(1, -1.5, '#FF9800', 'v₃');
         }
         
-        function drawVector(x, y, color, label) {
+        function drawMatrixVector(x, y, color, label, alpha = 1) {
             const ctx = matrixCtx;
-            const centerX = 400;
+            const centerX = 350;
             const centerY = 250;
+            const scale = 60;
             
+            ctx.globalAlpha = alpha;
             ctx.strokeStyle = color;
             ctx.fillStyle = color;
-            ctx.lineWidth = 3;
+            ctx.lineWidth = 2;
             
-            // Draw arrow
             ctx.beginPath();
             ctx.moveTo(centerX, centerY);
-            ctx.lineTo(centerX + x, centerY - y);
+            ctx.lineTo(centerX + x * scale, centerY - y * scale);
             ctx.stroke();
             
             // Arrowhead
             const angle = Math.atan2(-y, x);
-            const headLength = 10;
+            const headLength = 8;
             
             ctx.beginPath();
-            ctx.moveTo(centerX + x, centerY - y);
+            ctx.moveTo(centerX + x * scale, centerY - y * scale);
             ctx.lineTo(
-                centerX + x - headLength * Math.cos(angle - Math.PI/6),
-                centerY - y + headLength * Math.sin(angle - Math.PI/6)
+                centerX + x * scale - headLength * Math.cos(angle - Math.PI/6),
+                centerY - y * scale + headLength * Math.sin(angle - Math.PI/6)
             );
             ctx.lineTo(
-                centerX + x - headLength * Math.cos(angle + Math.PI/6),
-                centerY - y + headLength * Math.sin(angle + Math.PI/6)
+                centerX + x * scale - headLength * Math.cos(angle + Math.PI/6),
+                centerY - y * scale + headLength * Math.sin(angle + Math.PI/6)
             );
             ctx.closePath();
             ctx.fill();
             
-            // Label
-            ctx.font = 'bold 14px Arial';
-            ctx.fillText(label, centerX + x + 10, centerY - y);
+            if (label) {
+                ctx.font = 'bold 14px Arial';
+                ctx.fillText(label, centerX + x * scale + 10, centerY - y * scale);
+            }
+            
+            ctx.globalAlpha = 1;
         }
         
         function animateMatrix() {
@@ -469,24 +484,48 @@
             const duration = 3000;
             const startTime = Date.now();
             
+            const vectors = [
+                {x: 2, y: 1.5, color: '#2196F3', label: 'v₁'},
+                {x: -1.5, y: 2, color: '#4CAF50', label: 'v₂'},
+                {x: 1, y: -1.5, color: '#FF9800', label: 'v₃'}
+            ];
+            
             function animate() {
                 const elapsed = Date.now() - startTime;
                 t = Math.min(elapsed / duration, 1);
                 
                 drawMatrixGrid();
                 
-                // Animate transformation
-                const vectors = [
-                    {x: 200, y: 150, color: '#2196F3', label: 'x₁'},
-                    {x: 300, y: 200, color: '#4CAF50', label: 'x₂'},
-                    {x: 250, y: 100, color: '#FF9800', label: 'x₃'}
-                ];
-                
                 vectors.forEach(v => {
-                    const mean = (v.x + v.y) / 2 / Math.sqrt(2);
+                    // Draw original vector (fading)
+                    drawMatrixVector(v.x, v.y, v.color, '', 1 - t * 0.7);
+                    
+                    // Calculate and draw transformed vector
+                    const mean = (v.x + v.y) / 2;
                     const projX = v.x - mean * t;
                     const projY = v.y - mean * t;
-                    drawVector(projX, projY, v.color, v.label);
+                    drawMatrixVector(projX, projY, v.color, v.label);
+                    
+                    // Draw mean component
+                    if (t > 0.3 && t < 0.9) {
+                        const ctx = matrixCtx;
+                        ctx.strokeStyle = '#F44336';
+                        ctx.lineWidth = 1;
+                        ctx.setLineDash([3, 3]);
+                        ctx.globalAlpha = 0.5;
+                        
+                        const centerX = 350;
+                        const centerY = 250;
+                        const scale = 60;
+                        
+                        ctx.beginPath();
+                        ctx.moveTo(centerX, centerY);
+                        ctx.lineTo(centerX + mean * t * scale, centerY - mean * t * scale);
+                        ctx.stroke();
+                        
+                        ctx.setLineDash([]);
+                        ctx.globalAlpha = 1;
+                    }
                 });
                 
                 if (t < 1) {
@@ -498,14 +537,36 @@
         }
         
         function showMatrixSteps() {
-            // Implementation for step-by-step visualization
-            console.log('Showing matrix steps...');
+            const vectors = [
+                {x: 2, y: 1.5, color: '#2196F3', label: 'v₁'},
+                {x: -1.5, y: 2, color: '#4CAF50', label: 'v₂'},
+                {x: 1, y: -1.5, color: '#FF9800', label: 'v₃'}
+            ];
+            
+            const steps = [0, 0.33, 0.66, 1];
+            const t = steps[matrixStep % 4];
+            
+            drawMatrixGrid();
+            
+            vectors.forEach(v => {
+                if (t > 0) {
+                    drawMatrixVector(v.x, v.y, v.color, '', 0.3);
+                }
+                
+                const mean = (v.x + v.y) / 2;
+                const projX = v.x - mean * t;
+                const projY = v.y - mean * t;
+                drawMatrixVector(projX, projY, v.color, v.label);
+            });
+            
+            matrixStep++;
         }
         
         function resetMatrix() {
             if (matrixAnimationId) {
                 cancelAnimationFrame(matrixAnimationId);
             }
+            matrixStep = 0;
             drawMatrixGrid();
         }
         
@@ -522,22 +583,19 @@
             dataPoints = [];
             for (let i = 0; i < 50; i++) {
                 dataPoints.push({
-                    x: Math.random() * 4 - 1 + 2,
-                    y: Math.random() * 4 - 1 + 1
+                    x: (Math.random() - 0.5) * 4 + 1.5,
+                    y: (Math.random() - 0.5) * 4 + 1
                 });
             }
             
-            // Calculate mean
             const meanX = dataPoints.reduce((sum, p) => sum + p.x, 0) / dataPoints.length;
             const meanY = dataPoints.reduce((sum, p) => sum + p.y, 0) / dataPoints.length;
             
-            // Calculate centered points
             centeredPoints = dataPoints.map(p => ({
                 x: p.x - meanX,
                 y: p.y - meanY
             }));
             
-            // Update stats
             document.getElementById('origMean').textContent = `(${meanX.toFixed(2)}, ${meanY.toFixed(2)})`;
             document.getElementById('centMean').textContent = '(0.00, 0.00)';
             document.getElementById('numPoints').textContent = dataPoints.length;
@@ -545,9 +603,9 @@
             drawDataset(dataPoints, '#2196F3');
         }
         
-        function drawDataset(points, color) {
+        function drawDataset(points, color, showMean = true) {
             const ctx = datasetCtx;
-            const width = 800;
+            const width = 700;
             const height = 500;
             const centerX = width / 2;
             const centerY = height / 2;
@@ -555,17 +613,32 @@
             
             ctx.clearRect(0, 0, width, height);
             
+            // Draw grid
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 0.5;
+            for (let i = -4; i <= 4; i++) {
+                ctx.beginPath();
+                ctx.moveTo(centerX + i * scale, 50);
+                ctx.lineTo(centerX + i * scale, height - 50);
+                ctx.stroke();
+                
+                ctx.beginPath();
+                ctx.moveTo(50, centerY + i * scale);
+                ctx.lineTo(width - 50, centerY + i * scale);
+                ctx.stroke();
+            }
+            
             // Draw axes
             ctx.strokeStyle = '#333';
             ctx.lineWidth = 2;
             ctx.beginPath();
-            ctx.moveTo(0, centerY);
-            ctx.lineTo(width, centerY);
+            ctx.moveTo(50, centerY);
+            ctx.lineTo(width - 50, centerY);
             ctx.stroke();
             
             ctx.beginPath();
-            ctx.moveTo(centerX, 0);
-            ctx.lineTo(centerX, height);
+            ctx.moveTo(centerX, 50);
+            ctx.lineTo(centerX, height - 50);
             ctx.stroke();
             
             // Draw points
@@ -576,17 +649,26 @@
                 ctx.fill();
             });
             
-            // Draw mean point
-            if (points === dataPoints) {
+            // Draw mean
+            if (showMean && points === dataPoints) {
                 const meanX = points.reduce((sum, p) => sum + p.x, 0) / points.length;
                 const meanY = points.reduce((sum, p) => sum + p.y, 0) / points.length;
                 
                 ctx.fillStyle = '#F44336';
-                ctx.beginPath();
-                ctx.arc(centerX + meanX * scale, centerY - meanY * scale, 8, 0, 2 * Math.PI);
-                ctx.fill();
+                ctx.strokeStyle = '#F44336';
+                ctx.lineWidth = 2;
                 
-                ctx.fillStyle = '#333';
+                // Cross for mean
+                ctx.beginPath();
+                ctx.moveTo(centerX + meanX * scale - 8, centerY - meanY * scale);
+                ctx.lineTo(centerX + meanX * scale + 8, centerY - meanY * scale);
+                ctx.stroke();
+                
+                ctx.beginPath();
+                ctx.moveTo(centerX + meanX * scale, centerY - meanY * scale - 8);
+                ctx.lineTo(centerX + meanX * scale, centerY - meanY * scale + 8);
+                ctx.stroke();
+                
                 ctx.font = 'bold 14px Arial';
                 ctx.fillText('Mean', centerX + meanX * scale + 10, centerY - meanY * scale);
             }
@@ -603,13 +685,12 @@
                 const elapsed = Date.now() - startTime;
                 t = Math.min(elapsed / duration, 1);
                 
-                // Interpolate points
                 const currentPoints = dataPoints.map(p => ({
                     x: p.x - meanX * t,
                     y: p.y - meanY * t
                 }));
                 
-                drawDataset(currentPoints, '#2196F3');
+                drawDataset(currentPoints, '#2196F3', t < 0.9);
                 
                 if (t < 1) {
                     requestAnimationFrame(animate);
@@ -620,9 +701,8 @@
         }
         
         function showBeforeAfter() {
-            // Split screen showing before and after
             const ctx = datasetCtx;
-            const width = 800;
+            const width = 700;
             const height = 500;
             
             ctx.clearRect(0, 0, width, height);
@@ -632,8 +712,8 @@
             ctx.lineWidth = 2;
             ctx.setLineDash([5, 5]);
             ctx.beginPath();
-            ctx.moveTo(width / 2, 0);
-            ctx.lineTo(width / 2, height);
+            ctx.moveTo(width / 2, 50);
+            ctx.lineTo(width / 2, height - 50);
             ctx.stroke();
             ctx.setLineDash([]);
             
@@ -643,81 +723,107 @@
             ctx.fillText('Original', width / 4 - 30, 30);
             ctx.fillText('Centered', 3 * width / 4 - 30, 30);
             
-            // Draw original on left
             const scale = 40;
             const leftCenterX = width / 4;
             const rightCenterX = 3 * width / 4;
             const centerY = height / 2;
             
-            // Left axes
+            // Draw axes
             ctx.strokeStyle = '#333';
             ctx.lineWidth = 1;
+            
             ctx.beginPath();
             ctx.moveTo(50, centerY);
-            ctx.lineTo(width / 2 - 50, centerY);
+            ctx.lineTo(width / 2 - 20, centerY);
             ctx.stroke();
             
             ctx.beginPath();
-            ctx.moveTo(leftCenterX, 50);
-            ctx.lineTo(leftCenterX, height - 50);
+            ctx.moveTo(leftCenterX, 80);
+            ctx.lineTo(leftCenterX, height - 80);
             ctx.stroke();
             
-            // Right axes
             ctx.beginPath();
-            ctx.moveTo(width / 2 + 50, centerY);
+            ctx.moveTo(width / 2 + 20, centerY);
             ctx.lineTo(width - 50, centerY);
             ctx.stroke();
             
             ctx.beginPath();
-            ctx.moveTo(rightCenterX, 50);
-            ctx.lineTo(rightCenterX, height - 50);
+            ctx.moveTo(rightCenterX, 80);
+            ctx.lineTo(rightCenterX, height - 80);
             ctx.stroke();
             
             // Draw points
             ctx.fillStyle = '#2196F3';
             dataPoints.forEach(p => {
                 ctx.beginPath();
-                ctx.arc(leftCenterX + p.x * scale, centerY - p.y * scale, 3, 0, 2 * Math.PI);
+                ctx.arc(leftCenterX + p.x * scale, centerY - p.y * scale, 2, 0, 2 * Math.PI);
                 ctx.fill();
             });
             
             ctx.fillStyle = '#9C27B0';
             centeredPoints.forEach(p => {
                 ctx.beginPath();
-                ctx.arc(rightCenterX + p.x * scale, centerY - p.y * scale, 3, 0, 2 * Math.PI);
+                ctx.arc(rightCenterX + p.x * scale, centerY - p.y * scale, 2, 0, 2 * Math.PI);
                 ctx.fill();
             });
+            
+            // Draw means
+            const meanX = dataPoints.reduce((sum, p) => sum + p.x, 0) / dataPoints.length;
+            const meanY = dataPoints.reduce((sum, p) => sum + p.y, 0) / dataPoints.length;
+            
+            ctx.strokeStyle = '#F44336';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(leftCenterX + meanX * scale - 6, centerY - meanY * scale);
+            ctx.lineTo(leftCenterX + meanX * scale + 6, centerY - meanY * scale);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(leftCenterX + meanX * scale, centerY - meanY * scale - 6);
+            ctx.lineTo(leftCenterX + meanX * scale, centerY - meanY * scale + 6);
+            ctx.stroke();
+            
+            ctx.strokeStyle = '#4CAF50';
+            ctx.beginPath();
+            ctx.moveTo(rightCenterX - 6, centerY);
+            ctx.lineTo(rightCenterX + 6, centerY);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(rightCenterX, centerY - 6);
+            ctx.lineTo(rightCenterX, centerY + 6);
+            ctx.stroke();
         }
         
         // 3D Visualization Implementation
-        let threeDCtx, rotation = {x: 0.5, y: 0.5, z: 0};
+        let threeDCtx, rotation = {x: 0.5, y: 0.8}, autoRotate = false;
         let points3D = [];
         
         function init3DVisualization() {
             const canvas = document.getElementById('threeDCanvas');
             threeDCtx = canvas.getContext('2d');
             
-            // Add some initial points
             points3D = [
                 {x: 2, y: 1, z: 1.5},
                 {x: -1, y: 2, z: 0.5},
-                {x: 1, y: -1, z: 2}
+                {x: 1, y: -1, z: 2},
+                {x: 0.5, y: 1.5, z: -0.5}
             ];
             
-            draw3D();
-            
-            // Setup rotation control
-            document.getElementById('rotSpeed').addEventListener('input', (e) => {
-                document.getElementById('rotSpeedValue').textContent = e.target.value;
+            document.getElementById('angleX').addEventListener('input', (e) => {
+                rotation.x = e.target.value * Math.PI / 180;
+                draw3D();
             });
             
-            // Auto-rotate
-            animate3DRotation();
+            document.getElementById('angleY').addEventListener('input', (e) => {
+                rotation.y = e.target.value * Math.PI / 180;
+                draw3D();
+            });
+            
+            draw3D();
         }
         
         function project3Dto2D(x, y, z) {
-            const scale = 100;
-            const centerX = 400;
+            const scale = 80;
+            const centerX = 350;
             const centerY = 250;
             
             // Apply rotation
@@ -734,126 +840,185 @@
             const x2 = x * cosY + z1 * sinY;
             const z2 = -x * sinY + z1 * cosY;
             
-            // Project to 2D (simple orthographic projection)
             return {
                 x: centerX + x2 * scale,
-                y: centerY - y1 * scale
+                y: centerY - y1 * scale,
+                z: z2
             };
         }
         
         function draw3D() {
             const ctx = threeDCtx;
-            const width = 800;
+            const width = 700;
             const height = 500;
             
             ctx.clearRect(0, 0, width, height);
             
-            // Draw axes
-            ctx.strokeStyle = '#999';
-            ctx.lineWidth = 1;
+            // Sort elements by depth
+            const elements = [];
             
-            // X axis (red)
-            const xStart = project3Dto2D(-3, 0, 0);
-            const xEnd = project3Dto2D(3, 0, 0);
-            ctx.strokeStyle = '#F44336';
-            ctx.beginPath();
-            ctx.moveTo(xStart.x, xStart.y);
-            ctx.lineTo(xEnd.x, xEnd.y);
-            ctx.stroke();
+            // Add axes
+            elements.push({
+                type: 'axis',
+                color: '#F44336',
+                points: [project3Dto2D(-3, 0, 0), project3Dto2D(3, 0, 0)],
+                label: 'x',
+                z: (project3Dto2D(-3, 0, 0).z + project3Dto2D(3, 0, 0).z) / 2
+            });
             
-            // Y axis (green)
-            const yStart = project3Dto2D(0, -3, 0);
-            const yEnd = project3Dto2D(0, 3, 0);
-            ctx.strokeStyle = '#4CAF50';
-            ctx.beginPath();
-            ctx.moveTo(yStart.x, yStart.y);
-            ctx.lineTo(yEnd.x, yEnd.y);
-            ctx.stroke();
+            elements.push({
+                type: 'axis',
+                color: '#4CAF50',
+                points: [project3Dto2D(0, -3, 0), project3Dto2D(0, 3, 0)],
+                label: 'y',
+                z: (project3Dto2D(0, -3, 0).z + project3Dto2D(0, 3, 0).z) / 2
+            });
             
-            // Z axis (blue)
-            const zStart = project3Dto2D(0, 0, -3);
-            const zEnd = project3Dto2D(0, 0, 3);
-            ctx.strokeStyle = '#2196F3';
-            ctx.beginPath();
-            ctx.moveTo(zStart.x, zStart.y);
-            ctx.lineTo(zEnd.x, zEnd.y);
-            ctx.stroke();
+            elements.push({
+                type: 'axis',
+                color: '#2196F3',
+                points: [project3Dto2D(0, 0, -3), project3Dto2D(0, 0, 3)],
+                label: 'z',
+                z: (project3Dto2D(0, 0, -3).z + project3Dto2D(0, 0, 3).z) / 2
+            });
             
-            // Draw 1 vector
-            const oneVector = project3Dto2D(1, 1, 1);
-            const origin = project3Dto2D(0, 0, 0);
-            ctx.strokeStyle = '#FF9800';
-            ctx.lineWidth = 3;
-            ctx.beginPath();
-            ctx.moveTo(origin.x, origin.y);
-            ctx.lineTo(oneVector.x, oneVector.y);
-            ctx.stroke();
+            // Add 1 vector
+            const oneStart = project3Dto2D(0, 0, 0);
+            const oneEnd = project3Dto2D(1, 1, 1);
+            elements.push({
+                type: 'vector',
+                color: '#FF9800',
+                start: oneStart,
+                end: oneEnd,
+                label: '1',
+                z: (oneStart.z + oneEnd.z) / 2
+            });
             
-            // Draw plane orthogonal to 1
-            ctx.strokeStyle = 'rgba(156, 39, 176, 0.3)';
-            ctx.fillStyle = 'rgba(156, 39, 176, 0.1)';
-            ctx.lineWidth = 1;
-            
-            // Draw grid on the plane x + y + z = 0
-            const planePoints = [
+            // Add plane
+            const planeCorners = [
                 project3Dto2D(-2, -1, 3),
                 project3Dto2D(3, -2, -1),
                 project3Dto2D(1, 2, -3),
                 project3Dto2D(-3, 1, 2)
             ];
             
-            ctx.beginPath();
-            ctx.moveTo(planePoints[0].x, planePoints[0].y);
-            planePoints.forEach(p => ctx.lineTo(p.x, p.y));
-            ctx.closePath();
-            ctx.fill();
-            ctx.stroke();
-            
-            // Draw points and their projections
-            points3D.forEach(p => {
-                const point2D = project3Dto2D(p.x, p.y, p.z);
-                
-                // Original point
-                ctx.fillStyle = '#2196F3';
-                ctx.beginPath();
-                ctx.arc(point2D.x, point2D.y, 5, 0, 2 * Math.PI);
-                ctx.fill();
-                
-                // Calculate projection
-                const mean = (p.x + p.y + p.z) / 3;
-                const projX = p.x - mean;
-                const projY = p.y - mean;
-                const projZ = p.z - mean;
-                const proj2D = project3Dto2D(projX, projY, projZ);
-                
-                // Projected point
-                ctx.fillStyle = '#9C27B0';
-                ctx.beginPath();
-                ctx.arc(proj2D.x, proj2D.y, 5, 0, 2 * Math.PI);
-                ctx.fill();
-                
-                // Connection line
-                ctx.strokeStyle = 'rgba(0,0,0,0.3)';
-                ctx.lineWidth = 1;
-                ctx.setLineDash([3, 3]);
-                ctx.beginPath();
-                ctx.moveTo(point2D.x, point2D.y);
-                ctx.lineTo(proj2D.x, proj2D.y);
-                ctx.stroke();
-                ctx.setLineDash([]);
+            elements.push({
+                type: 'plane',
+                points: planeCorners,
+                z: planeCorners.reduce((sum, p) => sum + p.z, 0) / 4
             });
-        }
-        
-        function animate3DRotation() {
-            const speed = document.getElementById('rotSpeed').value / 1000;
-            rotation.y += speed;
             
-            draw3D();
-            requestAnimationFrame(animate3DRotation);
+            // Add points and projections
+            points3D.forEach(p => {
+                const point3D = project3Dto2D(p.x, p.y, p.z);
+                const mean = (p.x + p.y + p.z) / 3;
+                const proj3D = project3Dto2D(p.x - mean, p.y - mean, p.z - mean);
+                
+                elements.push({
+                    type: 'line',
+                    start: point3D,
+                    end: proj3D,
+                    z: (point3D.z + proj3D.z) / 2
+                });
+                
+                elements.push({
+                    type: 'point',
+                    pos: point3D,
+                    color: '#2196F3',
+                    z: point3D.z
+                });
+                
+                elements.push({
+                    type: 'point',
+                    pos: proj3D,
+                    color: '#9C27B0',
+                    z: proj3D.z
+                });
+            });
+            
+            // Sort by depth
+            elements.sort((a, b) => a.z - b.z);
+            
+            // Draw elements
+            elements.forEach(el => {
+                if (el.type === 'axis') {
+                    ctx.strokeStyle = el.color;
+                    ctx.lineWidth = 2;
+                    ctx.globalAlpha = 0.7;
+                    ctx.beginPath();
+                    ctx.moveTo(el.points[0].x, el.points[0].y);
+                    ctx.lineTo(el.points[1].x, el.points[1].y);
+                    ctx.stroke();
+                    ctx.globalAlpha = 1;
+                    
+                    ctx.fillStyle = el.color;
+                    ctx.font = 'bold 14px Arial';
+                    ctx.fillText(el.label, el.points[1].x + 5, el.points[1].y);
+                } else if (el.type === 'plane') {
+                    ctx.fillStyle = 'rgba(156, 39, 176, 0.1)';
+                    ctx.strokeStyle = 'rgba(156, 39, 176, 0.3)';
+                    ctx.lineWidth = 1;
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(el.points[0].x, el.points[0].y);
+                    el.points.forEach(p => ctx.lineTo(p.x, p.y));
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.stroke();
+                } else if (el.type === 'vector') {
+                    ctx.strokeStyle = el.color;
+                    ctx.fillStyle = el.color;
+                    ctx.lineWidth = 3;
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(el.start.x, el.start.y);
+                    ctx.lineTo(el.end.x, el.end.y);
+                    ctx.stroke();
+                    
+                    // Arrowhead
+                    const angle = Math.atan2(el.end.y - el.start.y, el.end.x - el.start.x);
+                    const headLength = 10;
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(el.end.x, el.end.y);
+                    ctx.lineTo(
+                        el.end.x - headLength * Math.cos(angle - Math.PI/6),
+                        el.end.y - headLength * Math.sin(angle - Math.PI/6)
+                    );
+                    ctx.lineTo(
+                        el.end.x - headLength * Math.cos(angle + Math.PI/6),
+                        el.end.y - headLength * Math.sin(angle + Math.PI/6)
+                    );
+                    ctx.closePath();
+                    ctx.fill();
+                    
+                    ctx.font = 'bold 16px Arial';
+                    ctx.fillText(el.label, el.end.x + 10, el.end.y);
+                } else if (el.type === 'line') {
+                    ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+                    ctx.lineWidth = 1;
+                    ctx.setLineDash([3, 3]);
+                    ctx.beginPath();
+                    ctx.moveTo(el.start.x, el.start.y);
+                    ctx.lineTo(el.end.x, el.end.y);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                } else if (el.type === 'point') {
+                    ctx.fillStyle = el.color;
+                    ctx.beginPath();
+                    ctx.arc(el.pos.x, el.pos.y, 5, 0, 2 * Math.PI);
+                    ctx.fill();
+                }
+            });
+            
+            // Add legend
+            ctx.fillStyle = '#333';
+            ctx.font = '12px Arial';
+            ctx.fillText('Blue: Original points', 20, height - 40);
+            ctx.fillText('Purple: Centered points on x+y+z=0', 20, height - 20);
         }
         
         function animate3D() {
-            // Animate projection of points
             let t = 0;
             const duration = 2000;
             const startTime = Date.now();
@@ -862,24 +1027,75 @@
                 const elapsed = Date.now() - startTime;
                 t = Math.min(elapsed / duration, 1);
                 
-                // Temporarily modify points for animation
-                const tempPoints = points3D.map(p => {
-                    const mean = (p.x + p.y + p.z) / 3;
-                    return {
-                        x: p.x - mean * t,
-                        y: p.y - mean * t,
-                        z: p.z - mean * t
-                    };
-                });
+                const ctx = threeDCtx;
+                const width = 700;
+                const height = 500;
                 
-                // Swap temporarily
-                const backup = points3D;
-                points3D = tempPoints;
-                draw3D();
-                points3D = backup;
+                ctx.clearRect(0, 0, width, height);
+                
+                // Draw axes
+                ctx.strokeStyle = '#999';
+                ctx.lineWidth = 1;
+                
+                const xStart = project3Dto2D(-3, 0, 0);
+                const xEnd = project3Dto2D(3, 0, 0);
+                ctx.strokeStyle = '#F44336';
+                ctx.beginPath();
+                ctx.moveTo(xStart.x, xStart.y);
+                ctx.lineTo(xEnd.x, xEnd.y);
+                ctx.stroke();
+                
+                const yStart = project3Dto2D(0, -3, 0);
+                const yEnd = project3Dto2D(0, 3, 0);
+                ctx.strokeStyle = '#4CAF50';
+                ctx.beginPath();
+                ctx.moveTo(yStart.x, yStart.y);
+                ctx.lineTo(yEnd.x, yEnd.y);
+                ctx.stroke();
+                
+                const zStart = project3Dto2D(0, 0, -3);
+                const zEnd = project3Dto2D(0, 0, 3);
+                ctx.strokeStyle = '#2196F3';
+                ctx.beginPath();
+                ctx.moveTo(zStart.x, zStart.y);
+                ctx.lineTo(zEnd.x, zEnd.y);
+                ctx.stroke();
+                
+                // Draw plane
+                ctx.fillStyle = 'rgba(156, 39, 176, 0.1)';
+                ctx.strokeStyle = 'rgba(156, 39, 176, 0.3)';
+                const planeCorners = [
+                    project3Dto2D(-2, -1, 3),
+                    project3Dto2D(3, -2, -1),
+                    project3Dto2D(1, 2, -3),
+                    project3Dto2D(-3, 1, 2)
+                ];
+                ctx.beginPath();
+                ctx.moveTo(planeCorners[0].x, planeCorners[0].y);
+                planeCorners.forEach(p => ctx.lineTo(p.x, p.y));
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+                
+                // Animate points
+                points3D.forEach(p => {
+                    const mean = (p.x + p.y + p.z) / 3;
+                    const currentX = p.x - mean * t;
+                    const currentY = p.y - mean * t;
+                    const currentZ = p.z - mean * t;
+                    
+                    const point2D = project3Dto2D(currentX, currentY, currentZ);
+                    
+                    ctx.fillStyle = t < 1 ? '#2196F3' : '#9C27B0';
+                    ctx.beginPath();
+                    ctx.arc(point2D.x, point2D.y, 5, 0, 2 * Math.PI);
+                    ctx.fill();
+                });
                 
                 if (t < 1) {
                     requestAnimationFrame(animate);
+                } else {
+                    draw3D();
                 }
             }
             
@@ -888,25 +1104,44 @@
         
         function add3DPoint() {
             points3D.push({
-                x: Math.random() * 4 - 2,
-                y: Math.random() * 4 - 2,
-                z: Math.random() * 4 - 2
+                x: (Math.random() - 0.5) * 4,
+                y: (Math.random() - 0.5) * 4,
+                z: (Math.random() - 0.5) * 4
             });
             draw3D();
         }
         
+        function toggleRotation() {
+            autoRotate = !autoRotate;
+            if (autoRotate) {
+                animateRotation();
+            }
+        }
+        
+        function animateRotation() {
+            if (!autoRotate) return;
+            
+            rotation.y += 0.01;
+            draw3D();
+            requestAnimationFrame(animateRotation);
+        }
+        
         function reset3D() {
+            autoRotate = false;
             points3D = [
                 {x: 2, y: 1, z: 1.5},
                 {x: -1, y: 2, z: 0.5},
-                {x: 1, y: -1, z: 2}
+                {x: 1, y: -1, z: 2},
+                {x: 0.5, y: 1.5, z: -0.5}
             ];
-            rotation = {x: 0.5, y: 0.5, z: 0};
+            rotation = {x: 0.5, y: 0.8};
+            document.getElementById('angleX').value = 30;
+            document.getElementById('angleY').value = 45;
             draw3D();
         }
         
         // Eigenspace Implementation
-        let eigenCtx;
+        let eigenCtx, eigenAnimationId;
         
         function initEigenVisualization() {
             const canvas = document.getElementById('eigenCanvas');
@@ -916,76 +1151,220 @@
         
         function drawEigenspace() {
             const ctx = eigenCtx;
-            const width = 800;
+            const width = 700;
             const height = 500;
             const centerX = width / 2;
             const centerY = height / 2;
+            const scale = 80;
             
             ctx.clearRect(0, 0, width, height);
+            
+            // Draw grid
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 0.5;
+            for (let i = -3; i <= 3; i++) {
+                ctx.beginPath();
+                ctx.moveTo(centerX + i * scale, 50);
+                ctx.lineTo(centerX + i * scale, height - 50);
+                ctx.stroke();
+                
+                ctx.beginPath();
+                ctx.moveTo(50, centerY + i * scale);
+                ctx.lineTo(width - 50, centerY + i * scale);
+                ctx.stroke();
+            }
             
             // Draw axes
             ctx.strokeStyle = '#333';
             ctx.lineWidth = 2;
             ctx.beginPath();
-            ctx.moveTo(0, centerY);
-            ctx.lineTo(width, centerY);
+            ctx.moveTo(50, centerY);
+            ctx.lineTo(width - 50, centerY);
             ctx.stroke();
             
             ctx.beginPath();
-            ctx.moveTo(centerX, 0);
-            ctx.lineTo(centerX, height);
+            ctx.moveTo(centerX, 50);
+            ctx.lineTo(centerX, height - 50);
             ctx.stroke();
             
-            // Draw eigenspaces
-            const scale = 80;
-            
-            // Eigenspace for λ=0 (span of 1)
+            // Draw eigenspace for λ=0 (red line along 1)
             ctx.strokeStyle = '#F44336';
             ctx.lineWidth = 3;
             ctx.beginPath();
-            ctx.moveTo(centerX - 200, centerY - 200);
-            ctx.lineTo(centerX + 200, centerY + 200);
+            ctx.moveTo(centerX - 2.5*scale, centerY - 2.5*scale);
+            ctx.lineTo(centerX + 2.5*scale, centerY + 2.5*scale);
             ctx.stroke();
             
-            ctx.fillStyle = '#F44336';
-            ctx.font = 'bold 14px Arial';
-            ctx.fillText('λ=0 (kernel)', centerX + 210, centerY + 210);
-            
-            // Eigenspace for λ=1 (1⊥)
+            // Draw eigenspace for λ=1 (blue dashed line, 1⊥)
             ctx.strokeStyle = '#2196F3';
             ctx.lineWidth = 3;
-            ctx.setLineDash([5, 5]);
+            ctx.setLineDash([8, 4]);
             ctx.beginPath();
-            ctx.moveTo(centerX - 200, centerY + 200);
-            ctx.lineTo(centerX + 200, centerY - 200);
+            ctx.moveTo(centerX - 2.5*scale, centerY + 2.5*scale);
+            ctx.lineTo(centerX + 2.5*scale, centerY - 2.5*scale);
             ctx.stroke();
             ctx.setLineDash([]);
             
-            ctx.fillStyle = '#2196F3';
-            ctx.fillText('λ=1 (1⊥)', centerX + 210, centerY - 190);
+            // Labels
+            ctx.fillStyle = '#F44336';
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('λ=0 (kernel)', centerX + 2.6*scale, centerY + 2.6*scale);
             
-            // Draw sample eigenvectors
-            drawEigenvector(1, 1, 0, '#F44336');
-            drawEigenvector(1, -1, 1, '#2196F3');
-            drawEigenvector(-1, 1, 1, '#2196F3');
+            ctx.fillStyle = '#2196F3';
+            ctx.fillText('λ=1 (1⊥)', centerX + 2.6*scale, centerY - 2.4*scale);
+            
+            // Draw 1 vector
+            ctx.strokeStyle = '#FF9800';
+            ctx.fillStyle = '#FF9800';
+            ctx.lineWidth = 2;
+            
+            const oneX = scale;
+            const oneY = scale;
+            
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(centerX + oneX, centerY - oneY);
+            ctx.stroke();
+            
+            // Arrowhead
+            const angle = Math.atan2(-oneY, oneX);
+            const headLength = 10;
+            
+            ctx.beginPath();
+            ctx.moveTo(centerX + oneX, centerY - oneY);
+            ctx.lineTo(
+                centerX + oneX - headLength * Math.cos(angle - Math.PI/6),
+                centerY - oneY + headLength * Math.sin(angle - Math.PI/6)
+            );
+            ctx.lineTo(
+                centerX + oneX - headLength * Math.cos(angle + Math.PI/6),
+                centerY - oneY + headLength * Math.sin(angle + Math.PI/6)
+            );
+            ctx.closePath();
+            ctx.fill();
+            
+            ctx.font = 'bold 16px Arial';
+            ctx.fillText('1', centerX + oneX + 10, centerY - oneY);
         }
         
-        function drawEigenvector(x, y, eigenvalue, color) {
+        function animateEigenDecomposition() {
+            if (eigenAnimationId) {
+                cancelAnimationFrame(eigenAnimationId);
+            }
+            
+            let t = 0;
+            const duration = 4000;
+            const startTime = Date.now();
+            
+            // Test vector
+            const testX = 2;
+            const testY = 0.5;
+            
+            function animate() {
+                const elapsed = Date.now() - startTime;
+                t = Math.min(elapsed / duration, 1);
+                
+                drawEigenspace();
+                
+                const ctx = eigenCtx;
+                const centerX = 350;
+                const centerY = 250;
+                const scale = 80;
+                
+                // Phase 1: Show original vector (0-0.25)
+                // Phase 2: Decompose into components (0.25-0.5)
+                // Phase 3: Apply transformation (0.5-0.75)
+                // Phase 4: Show result (0.75-1)
+                
+                if (t <= 0.25) {
+                    // Show original vector
+                    const alpha = t * 4;
+                    ctx.globalAlpha = alpha;
+                    drawEigenVector(testX, testY, '#666', 'v');
+                    ctx.globalAlpha = 1;
+                    
+                    document.getElementById('eigenMath').innerHTML = 
+                        `Original vector: v = (${testX}, ${testY})`;
+                } else if (t <= 0.5) {
+                    // Show decomposition
+                    drawEigenVector(testX, testY, '#666', 'v', 0.3);
+                    
+                    const decompT = (t - 0.25) * 4;
+                    
+                    // Component along 1
+                    const proj1 = (testX + testY) / 2;
+                    ctx.globalAlpha = decompT;
+                    ctx.strokeStyle = '#F44336';
+                    ctx.lineWidth = 2;
+                    ctx.setLineDash([4, 4]);
+                    ctx.beginPath();
+                    ctx.moveTo(centerX, centerY);
+                    ctx.lineTo(centerX + proj1 * scale, centerY - proj1 * scale);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                    
+                    // Component in 1⊥
+                    ctx.strokeStyle = '#2196F3';
+                    ctx.beginPath();
+                    ctx.moveTo(centerX, centerY);
+                    ctx.lineTo(centerX + (testX - proj1) * scale, centerY - (testY - proj1) * scale);
+                    ctx.stroke();
+                    ctx.globalAlpha = 1;
+                    
+                    document.getElementById('eigenMath').innerHTML = 
+                        `Decomposition: v = <span style="color:#F44336">${proj1.toFixed(2)}·(1,1)</span> + ` +
+                        `<span style="color:#2196F3">(${(testX-proj1).toFixed(2)}, ${(testY-proj1).toFixed(2)})</span>`;
+                } else if (t <= 0.75) {
+                    // Apply transformation
+                    const transT = (t - 0.5) * 4;
+                    const proj1 = (testX + testY) / 2;
+                    
+                    // Fade out the component along 1
+                    ctx.globalAlpha = 1 - transT;
+                    ctx.strokeStyle = '#F44336';
+                    ctx.lineWidth = 2;
+                    ctx.setLineDash([4, 4]);
+                    ctx.beginPath();
+                    ctx.moveTo(centerX, centerY);
+                    ctx.lineTo(centerX + proj1 * scale * (1 - transT), centerY - proj1 * scale * (1 - transT));
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                    ctx.globalAlpha = 1;
+                    
+                    // Keep the 1⊥ component
+                    drawEigenVector(testX - proj1, testY - proj1, '#2196F3', 'γv');
+                    
+                    document.getElementById('eigenMath').innerHTML = 
+                        `Applying γ: <span style="color:#F44336">λ=0 kills (1,1) component</span>, ` +
+                        `<span style="color:#2196F3">λ=1 preserves 1⊥ component</span>`;
+                } else {
+                    // Show result
+                    const proj1 = (testX + testY) / 2;
+                    drawEigenVector(testX - proj1, testY - proj1, '#9C27B0', 'γv = v - proj₁(v)');
+                    
+                    document.getElementById('eigenMath').innerHTML = 
+                        `Result: γv = (${(testX-proj1).toFixed(2)}, ${(testY-proj1).toFixed(2)}) ∈ 1⊥`;
+                }
+                
+                if (t < 1) {
+                    eigenAnimationId = requestAnimationFrame(animate);
+                }
+            }
+            
+            animate();
+        }
+        
+        function drawEigenVector(x, y, color, label, alpha = 1) {
             const ctx = eigenCtx;
-            const centerX = 400;
+            const centerX = 350;
             const centerY = 250;
-            const scale = 100;
+            const scale = 80;
             
-            // Normalize
-            const norm = Math.sqrt(x * x + y * y);
-            x = x / norm * 1.5;
-            y = y / norm * 1.5;
-            
+            ctx.globalAlpha = alpha;
             ctx.strokeStyle = color;
             ctx.fillStyle = color;
             ctx.lineWidth = 2;
             
-            // Draw vector
             ctx.beginPath();
             ctx.moveTo(centerX, centerY);
             ctx.lineTo(centerX + x * scale, centerY - y * scale);
@@ -993,7 +1372,7 @@
             
             // Arrowhead
             const angle = Math.atan2(-y, x);
-            const headLength = 10;
+            const headLength = 8;
             
             ctx.beginPath();
             ctx.moveTo(centerX + x * scale, centerY - y * scale);
@@ -1007,365 +1386,116 @@
             );
             ctx.closePath();
             ctx.fill();
+            
+            if (label) {
+                ctx.font = 'bold 14px Arial';
+                ctx.fillText(label, centerX + x * scale + 10, centerY - y * scale);
+            }
+            
+            ctx.globalAlpha = 1;
         }
         
-        function showEigenDecomposition() {
-            // Show eigenvalue decomposition animation
+        function showEigenBasis() {
             drawEigenspace();
             
-            // Add text explanation
             const ctx = eigenCtx;
-            ctx.fillStyle = '#333';
-            ctx.font = '14px Arial';
-            ctx.fillText('γ = V Λ V^T where:', 50, 450);
-            ctx.fillText('V = eigenvectors, Λ = diag(0, 1, 1, ...)', 50, 470);
-        }
-        
-        function animateEigenTransform() {
-            let t = 0;
-            const duration = 3000;
-            const startTime = Date.now();
-            
-            function animate() {
-                const elapsed = Date.now() - startTime;
-                t = Math.min(elapsed / duration, 1);
-                
-                drawEigenspace();
-                
-                // Show transformation effect
-                const testVectors = [
-                    {x: 1.5, y: 1.5},  // Along 1
-                    {x: 1.5, y: -1.5}, // In 1⊥
-                    {x: -1, y: 1.5}    // In 1⊥
-                ];
-                
-                const ctx = eigenCtx;
-                const centerX = 400;
-                const centerY = 250;
-                const scale = 100;
-                
-                testVectors.forEach(v => {
-                    // Calculate projection
-                    const mean = (v.x + v.y) / 2;
-                    const projX = v.x - mean * t;
-                    const projY = v.y - mean * t;
-                    
-                    ctx.strokeStyle = 'rgba(100, 100, 100, 0.5)';
-                    ctx.lineWidth = 2;
-                    ctx.beginPath();
-                    ctx.moveTo(centerX + v.x * scale, centerY - v.y * scale);
-                    ctx.lineTo(centerX + projX * scale, centerY - projY * scale);
-                    ctx.stroke();
-                    
-                    // Draw points
-                    ctx.fillStyle = '#666';
-                    ctx.beginPath();
-                    ctx.arc(centerX + v.x * scale, centerY - v.y * scale, 4, 0, 2 * Math.PI);
-                    ctx.fill();
-                    
-                    ctx.fillStyle = '#9C27B0';
-                    ctx.beginPath();
-                    ctx.arc(centerX + projX * scale, centerY - projY * scale, 4, 0, 2 * Math.PI);
-                    ctx.fill();
-                });
-                
-                if (t < 1) {
-                    requestAnimationFrame(animate);
-                }
-            }
-            
-            animate();
-        }
-        
-        function showSpectrum() {
-            const ctx = eigenCtx;
-            const width = 800;
-            const height = 500;
-            
-            ctx.clearRect(0, 0, width, height);
-            
-            // Draw spectrum bar
-            const barWidth = 600;
-            const barHeight = 100;
-            const barX = 100;
-            const barY = 200;
-            
-            // Background
-            ctx.fillStyle = '#f0f0f0';
-            ctx.fillRect(barX, barY, barWidth, barHeight);
-            
-            // Eigenvalues
-            ctx.fillStyle = '#F44336';
-            ctx.fillRect(barX, barY, 100, barHeight);
-            ctx.fillStyle = '#333';
-            ctx.font = 'bold 16px Arial';
-            ctx.fillText('λ₁ = 0', barX + 30, barY + 50);
-            
-            ctx.fillStyle = '#2196F3';
-            ctx.fillRect(barX + 100, barY, 500, barHeight);
-            ctx.fillStyle = 'white';
-            ctx.fillText('λ₂, λ₃, ... = 1', barX + 300, barY + 50);
-            
-            // Labels
-            ctx.fillStyle = '#333';
-            ctx.font = '20px Arial';
-            ctx.fillText('Eigenvalue Spectrum of γ', 280, 150);
-            
-            ctx.font = '14px Arial';
-            ctx.fillText('Dimension 1: Kernel (span of 1)', barX, barY + 130);
-            ctx.fillText('Dimension N-1: Image (1⊥)', barX + 400, barY + 130);
-        }
-        
-        // PCA Implementation
-        let pcaCtx, pcaData = [];
-        
-        function initPCAVisualization() {
-            const canvas = document.getElementById('pcaCanvas');
-            pcaCtx = canvas.getContext('2d');
-            generatePCAData();
-        }
-        
-        function generatePCAData() {
-            pcaData = [];
-            const angle = Math.PI / 6; // 30 degrees
-            
-            for (let i = 0; i < 100; i++) {
-                const t = (Math.random() - 0.5) * 6;
-                const noise = (Math.random() - 0.5) * 0.8;
-                
-                pcaData.push({
-                    x: t * Math.cos(angle) + noise * Math.sin(angle) + 2,
-                    y: t * Math.sin(angle) - noise * Math.cos(angle) + 1
-                });
-            }
-            
-            drawPCAData();
-        }
-        
-        function drawPCAData() {
-            const ctx = pcaCtx;
-            const width = 800;
-            const height = 500;
-            const centerX = width / 2;
-            const centerY = height / 2;
-            const scale = 60;
-            
-            ctx.clearRect(0, 0, width, height);
-            
-            // Draw axes
-            ctx.strokeStyle = '#333';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(0, centerY);
-            ctx.lineTo(width, centerY);
-            ctx.stroke();
-            
-            ctx.beginPath();
-            ctx.moveTo(centerX, 0);
-            ctx.lineTo(centerX, height);
-            ctx.stroke();
-            
-            // Draw data points
-            ctx.fillStyle = '#2196F3';
-            pcaData.forEach(p => {
-                ctx.beginPath();
-                ctx.arc(centerX + p.x * scale, centerY - p.y * scale, 2, 0, 2 * Math.PI);
-                ctx.fill();
-            });
-        }
-        
-        function showPCAWithout() {
-            drawPCAData();
-            
-            // Calculate and draw principal components without centering
-            const ctx = pcaCtx;
-            const centerX = 400;
+            const centerX = 350;
             const centerY = 250;
-            const scale = 60;
+            const scale = 80;
             
-            // Simplified PCA (just for visualization)
-            // PC1 will point towards the data cloud (wrong!)
-            ctx.strokeStyle = '#F44336';
-            ctx.lineWidth = 3;
-            ctx.beginPath();
-            ctx.moveTo(centerX, centerY);
-            ctx.lineTo(centerX + 200, centerY - 100);
-            ctx.stroke();
+            // Show basis vectors
+            // For λ=0
+            drawEigenVector(1, 1, '#F44336', 'e₁=(1,1)/√2', 0.8);
             
-            ctx.fillStyle = '#F44336';
-            ctx.font = 'bold 14px Arial';
-            ctx.fillText('Wrong PC1', centerX + 210, centerY - 100);
+            // For λ=1
+            drawEigenVector(1, -1, '#2196F3', 'e₂=(1,-1)/√2', 0.8);
             
-            // Update stats
-            document.getElementById('pc1Var').textContent = '45%';
-            document.getElementById('pc2Var').textContent = '55%';
+            document.getElementById('eigenMath').innerHTML = 
+                'Eigenbasis: {e₁=(1,1)/√2, e₂=(1,-1)/√2}<br>' +
+                'Matrix form: γ = [e₁ e₂] · diag(0,1) · [e₁ e₂]ᵀ';
         }
         
-        function showPCAWith() {
-            // Center the data first
-            const meanX = pcaData.reduce((sum, p) => sum + p.x, 0) / pcaData.length;
-            const meanY = pcaData.reduce((sum, p) => sum + p.y, 0) / pcaData.length;
+        function testRandomVector() {
+            const x = (Math.random() - 0.5) * 4;
+            const y = (Math.random() - 0.5) * 4;
             
-            const centeredData = pcaData.map(p => ({
-                x: p.x - meanX,
-                y: p.y - meanY
-            }));
+            drawEigenspace();
             
-            // Draw centered data
-            const ctx = pcaCtx;
-            const width = 800;
-            const height = 500;
-            const centerX = width / 2;
-            const centerY = height / 2;
-            const scale = 60;
+            const ctx = eigenCtx;
+            const centerX = 350;
+            const centerY = 250;
+            const scale = 80;
             
-            ctx.clearRect(0, 0, width, height);
+            // Draw original
+            drawEigenVector(x, y, '#666', 'v');
             
-            // Draw axes
-            ctx.strokeStyle = '#333';
-            ctx.lineWidth = 2;
+            // Draw projection
+            const mean = (x + y) / 2;
+            drawEigenVector(x - mean, y - mean, '#9C27B0', 'γv');
+            
+            // Draw connection
+            ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([3, 3]);
             ctx.beginPath();
-            ctx.moveTo(0, centerY);
-            ctx.lineTo(width, centerY);
-            ctx.stroke();
-            
-            ctx.beginPath();
-            ctx.moveTo(centerX, 0);
-            ctx.lineTo(centerX, height);
-            ctx.stroke();
-            
-            // Draw centered data
-            ctx.fillStyle = '#9C27B0';
-            centeredData.forEach(p => {
-                ctx.beginPath();
-                ctx.arc(centerX + p.x * scale, centerY - p.y * scale, 2, 0, 2 * Math.PI);
-                ctx.fill();
-            });
-            
-            // Draw correct principal components
-            const angle = Math.PI / 6;
-            ctx.strokeStyle = '#4CAF50';
-            ctx.lineWidth = 3;
-            
-            // PC1
-            ctx.beginPath();
-            ctx.moveTo(centerX - 150 * Math.cos(angle), centerY + 150 * Math.sin(angle));
-            ctx.lineTo(centerX + 150 * Math.cos(angle), centerY - 150 * Math.sin(angle));
-            ctx.stroke();
-            
-            ctx.fillStyle = '#4CAF50';
-            ctx.font = 'bold 14px Arial';
-            ctx.fillText('Correct PC1', centerX + 160 * Math.cos(angle), centerY - 160 * Math.sin(angle));
-            
-            // PC2
-            ctx.strokeStyle = '#FF9800';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(centerX - 80 * Math.sin(angle), centerY - 80 * Math.cos(angle));
-            ctx.lineTo(centerX + 80 * Math.sin(angle), centerY + 80 * Math.cos(angle));
-            ctx.stroke();
-            
-            ctx.fillStyle = '#FF9800';
-            ctx.fillText('PC2', centerX + 90 * Math.sin(angle), centerY + 90 * Math.cos(angle));
-            
-            // Update stats
-            document.getElementById('pc1Var').textContent = '85%';
-            document.getElementById('pc2Var').textContent = '15%';
-        }
-        
-        function comparePCA() {
-            // Split screen comparison
-            const ctx = pcaCtx;
-            const width = 800;
-            const height = 500;
-            
-            ctx.clearRect(0, 0, width, height);
-            
-            // Draw dividing line
-            ctx.strokeStyle = '#666';
-            ctx.lineWidth = 2;
-            ctx.setLineDash([5, 5]);
-            ctx.beginPath();
-            ctx.moveTo(width / 2, 0);
-            ctx.lineTo(width / 2, height);
+            ctx.moveTo(centerX + x * scale, centerY - y * scale);
+            ctx.lineTo(centerX + (x - mean) * scale, centerY - (y - mean) * scale);
             ctx.stroke();
             ctx.setLineDash([]);
             
-            // Labels
-            ctx.fillStyle = '#333';
-            ctx.font = 'bold 16px Arial';
-            ctx.fillText('Without Centering', width / 4 - 60, 30);
-            ctx.fillText('With Centering', 3 * width / 4 - 50, 30);
-            
-            const scale = 30;
-            const leftCenterX = width / 4;
-            const rightCenterX = 3 * width / 4;
-            const centerY = height / 2;
-            
-            // Draw axes for both
-            ctx.strokeStyle = '#333';
-            ctx.lineWidth = 1;
-            
-            // Left axes
-            ctx.beginPath();
-            ctx.moveTo(50, centerY);
-            ctx.lineTo(width / 2 - 50, centerY);
-            ctx.stroke();
-            
-            ctx.beginPath();
-            ctx.moveTo(leftCenterX, 50);
-            ctx.lineTo(leftCenterX, height - 50);
-            ctx.stroke();
-            
-            // Right axes
-            ctx.beginPath();
-            ctx.moveTo(width / 2 + 50, centerY);
-            ctx.lineTo(width - 50, centerY);
-            ctx.stroke();
-            
-            ctx.beginPath();
-            ctx.moveTo(rightCenterX, 50);
-            ctx.lineTo(rightCenterX, height - 50);
-            ctx.stroke();
-            
-            // Draw data on left (uncentered)
-            ctx.fillStyle = '#2196F3';
-            pcaData.forEach(p => {
-                ctx.beginPath();
-                ctx.arc(leftCenterX + p.x * scale, centerY - p.y * scale, 2, 0, 2 * Math.PI);
-                ctx.fill();
-            });
-            
-            // Wrong PC on left
-            ctx.strokeStyle = '#F44336';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(leftCenterX, centerY);
-            ctx.lineTo(leftCenterX + 100, centerY - 50);
-            ctx.stroke();
-            
-            // Draw centered data on right
-            const meanX = pcaData.reduce((sum, p) => sum + p.x, 0) / pcaData.length;
-            const meanY = pcaData.reduce((sum, p) => sum + p.y, 0) / pcaData.length;
-            
-            ctx.fillStyle = '#9C27B0';
-            pcaData.forEach(p => {
-                ctx.beginPath();
-                ctx.arc(rightCenterX + (p.x - meanX) * scale, centerY - (p.y - meanY) * scale, 2, 0, 2 * Math.PI);
-                ctx.fill();
-            });
-            
-            // Correct PC on right
-            const angle = Math.PI / 6;
-            ctx.strokeStyle = '#4CAF50';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(rightCenterX - 75 * Math.cos(angle), centerY + 75 * Math.sin(angle));
-            ctx.lineTo(rightCenterX + 75 * Math.cos(angle), centerY - 75 * Math.sin(angle));
-            ctx.stroke();
+            document.getElementById('eigenMath').innerHTML = 
+                `v = (${x.toFixed(2)}, ${y.toFixed(2)})<br>` +
+                `mean = ${mean.toFixed(2)}<br>` +
+                `γv = (${(x-mean).toFixed(2)}, ${(y-mean).toFixed(2)})`;
         }
         
-        // Initialize first tab on load
+        function showMatrixForm() {
+            const ctx = eigenCtx;
+            const width = 700;
+            const height = 500;
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            // Draw matrix representation
+            ctx.fillStyle = '#333';
+            ctx.font = '20px Arial';
+            ctx.fillText('Matrix Form of γ in ℝ²', 250, 100);
+            
+            ctx.font = '18px Courier New';
+            
+            // Draw γ matrix
+            ctx.fillText('γ = I - (1/2)·11ᵀ =', 100, 200);
+            
+            // Draw identity matrix
+            ctx.fillText('[1  0]', 300, 180);
+            ctx.fillText('[0  1]', 300, 210);
+            
+            ctx.fillText('-', 380, 195);
+            
+            // Draw (1/2)·11ᵀ
+            ctx.fillText('1/2 ·', 420, 195);
+            ctx.fillText('[1  1]', 480, 180);
+            ctx.fillText('[1  1]', 480, 210);
+            
+            ctx.fillText('=', 200, 280);
+            
+            // Result
+            ctx.fillText('[1/2  -1/2]', 250, 265);
+            ctx.fillText('[-1/2  1/2]', 250, 295);
+            
+            // Eigenvalue decomposition
+            ctx.font = '16px Arial';
+            ctx.fillText('Eigenvalue Decomposition:', 100, 380);
+            
+            ctx.font = '14px Courier New';
+            ctx.fillText('γ = V Λ Vᵀ where V = [1/√2  1/√2], Λ = [0  0]', 100, 420);
+            ctx.fillText('                    [1/√2 -1/√2]      [0  1]', 100, 445);
+            
+            document.getElementById('eigenMath').innerHTML = 
+                'The centering matrix has rank N-1 (here: rank 1)';
+        }
+        
+        // Initialize on load
         window.onload = () => {
             initMatrixVisualization();
         };
