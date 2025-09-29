@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linear vs Log Spacing</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .chart-wrapper {
+            margin: 30px 0;
+            position: relative;
+            height: 300px;
+        }
+        .explanation {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #3498db;
+        }
+        .explanation h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .comparison-box {
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+        }
+        .comparison-box.linear {
+            background: #ffe6e6;
+            border-color: #e74c3c;
+        }
+        .comparison-box.log {
+            background: #e6f7ff;
+            border-color: #3498db;
+        }
+        .comparison-box h4 {
+            margin-top: 0;
+        }
+        .key-point {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #ffc107;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Linear vs Logarithmic Spacing</h1>
+        <div class="subtitle">Comparing np.linspace() and np.logspace() for C ∈ [10⁻⁴, 10⁴]</div>
+
+        <div class="explanation">
+            <h3>🔍 How np.logspace(-4, 4, 30) Works</h3>
+            <p><strong>Step 1:</strong> Create 30 evenly spaced points in the <em>exponent</em> space from -4 to 4:<br>
+            <code>exponents = [-4.0, -3.724, -3.448, ..., 3.724, 4.0]</code></p>
+            <p><strong>Step 2:</strong> Raise 10 to each exponent:<br>
+            <code>C_values = [10⁻⁴, 10⁻³·⁷²⁴, 10⁻³·⁴⁴⁸, ..., 10³·⁷²⁴, 10⁴]</code></p>
+            <p><strong>Result:</strong> Approximately 3.75 points per order of magnitude (30 points ÷ 8 orders)</p>
+        </div>
+
+        <div class="chart-wrapper">
+            <canvas id="linearChart"></canvas>
+        </div>
+
+        <div class="chart-wrapper">
+            <canvas id="logChart"></canvas>
+        </div>
+
+        <div class="key-point">
+            <strong>Why Linear Spacing Fails:</strong> With range [10⁻⁴, 10⁴], the step size is (10⁴ - 10⁻⁴)/29 ≈ 344.83. 
+            This means consecutive points differ by ~345, so points are: 0.0001, 345, 690, 1035, ... 
+            The first point is at 10⁻⁴, but the second is already at 345! Most points cluster near 10⁴, leaving the low-C region (10⁻⁴ to 10²) with only 1-2 samples.
+        </div>
+
+        <div class="comparison">
+            <div class="comparison-box linear">
+                <h4>Linear Spacing Issues</h4>
+                <ul>
+                    <li>29 out of 30 points above C = 100</li>
+                    <li>Only 1 point in [10⁻⁴, 10⁻¹]</li>
+                    <li>Misses critical low-regularization region</li>
+                    <li>Wastes samples in high-C plateau</li>
+                </ul>
+            </div>
+            <div class="comparison-box log">
+                <h4>Logarithmic Spacing Benefits</h4>
+                <ul>
+                    <li>~4 points per order of magnitude</li>
+                    <li>Equal coverage: [10⁻⁴, 10⁻³] same as [10³, 10⁴]</li>
+                    <li>Captures sharp accuracy changes at low C</li>
+                    <li>Optimal for parameters spanning orders of magnitude</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="code-block">
+import numpy as np
+
+# Linear spacing (BAD for wide ranges)
+linear = np.linspace(1e-4, 1e4, 30)
+print(f"Linear points: {linear[:5]}...")  
+# [1e-04, 344.83, 689.66, 1034.48, 1379.31...]
+
+# Logarithmic spacing (GOOD for wide ranges)
+logspace = np.logspace(-4, 4, 30)
+print(f"Log points: {logspace[:5]}...")  
+# [1e-04, 1.82e-04, 3.31e-04, 6.03e-04, 1.10e-03...]
+        </div>
+    </div>
+
+    <script>
+        // Generate sample points
+        const linearPoints = [];
+        const logPoints = [];
+        const numPoints = 30;
+        
+        // Linear spacing
+        const step = (10000 - 0.0001) / (numPoints - 1);
+        for (let i = 0; i < numPoints; i++) {
+            linearPoints.push(0.0001 + i * step);
+        }
+        
+        // Log spacing
+        for (let i = 0; i < numPoints; i++) {
+            const exponent = -4 + (8 * i) / (numPoints - 1);
+            logPoints.push(Math.pow(10, exponent));
+        }
+
+        // Common chart options
+        const commonOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `C = ${context.parsed.x.toExponential(2)}`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    type: 'logarithmic',
+                    title: {
+                        display: true,
+                        text: 'C value (log scale)',
+                        font: { size: 14, weight: 'bold' }
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            const exponent = Math.log10(value);
+                            if (Number.isInteger(exponent)) {
+                                return `10^${exponent}`;
+                            }
+                            return '';
+                        }
+                    }
+                },
+                y: {
+                    display: false,
+                    min: 0,
+                    max: 2
+                }
+            }
+        };
+
+        // Linear spacing chart
+        new Chart(document.getElementById('linearChart'), {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Linear Spacing',
+                    data: linearPoints.map(x => ({x: x, y: 1})),
+                    backgroundColor: '#e74c3c',
+                    pointRadius: 6,
+                    pointHoverRadius: 8
+                }]
+            },
+            options: {
+                ...commonOptions,
+                plugins: {
+                    ...commonOptions.plugins,
+                    title: {
+                        display: true,
+                        text: 'Linear Spacing: np.linspace(1e-4, 1e4, 30) - Points cluster at high values!',
+                        font: { size: 16, weight: 'bold' },
+                        color: '#e74c3c'
+                    }
+                }
+            }
+        });
+
+        // Log spacing chart
+        new Chart(document.getElementById('logChart'), {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Log Spacing',
+                    data: logPoints.map(x => ({x: x, y: 1})),
+                    backgroundColor: '#3498db',
+                    pointRadius: 6,
+                    pointHoverRadius: 8
+                }]
+            },
+            options: {
+                ...commonOptions,
+                plugins: {
+                    ...commonOptions.plugins,
+                    title: {
+                        display: true,
+                        text: 'Logarithmic Spacing: np.logspace(-4, 4, 30) - Evenly distributed across all orders!',
+                        font: { size: 16, weight: 'bold' },
+                        color: '#3498db'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
